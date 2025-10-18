@@ -22,28 +22,30 @@ jobs:
         with:
           flutter-version: '3.22.0'
 
-      # 3️⃣ 获取依赖（根目录）
-      - name: Get dependencies
+      # 3️⃣ 编译 simple_live_app
+      - name: Get dependencies (simple_live_app)
         run: flutter pub get
+        working-directory: simple_live_app
 
-      # 4️⃣ 编译 simple_live_app (手机版)
       - name: Build simple_live_app (Android)
         run: flutter build apk --release
         working-directory: simple_live_app
 
-      # 5️⃣ 保存 simple_live_app 的 APK
       - name: Upload simple_live_app APK
         uses: actions/upload-artifact@v4
         with:
           name: simple_live_app-release-apk
           path: simple_live_app/build/app/outputs/flutter-apk/app-release.apk
 
-      # 6️⃣ 编译 simple_live_tv_app (TV版)
+      # 4️⃣ 编译 simple_live_tv_app
+      - name: Get dependencies (simple_live_tv_app)
+        run: flutter pub get
+        working-directory: simple_live_tv_app
+
       - name: Build simple_live_tv_app (Android TV)
         run: flutter build apk --release
         working-directory: simple_live_tv_app
 
-      # 7️⃣ 保存 simple_live_tv_app 的 APK
       - name: Upload simple_live_tv_app APK
         uses: actions/upload-artifact@v4
         with:
