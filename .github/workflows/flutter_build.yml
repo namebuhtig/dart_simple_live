@@ -1,0 +1,51 @@
+name: Build Flutter Android Apps
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1️⃣ 检出源码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ 安装 Flutter 环境
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.0'
+
+      # 3️⃣ 获取依赖（根目录）
+      - name: Get dependencies
+        run: flutter pub get
+
+      # 4️⃣ 编译 simple_live_app (手机版)
+      - name: Build simple_live_app (Android)
+        run: flutter build apk --release
+        working-directory: simple_live_app
+
+      # 5️⃣ 保存 simple_live_app 的 APK
+      - name: Upload simple_live_app APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: simple_live_app-release-apk
+          path: simple_live_app/build/app/outputs/flutter-apk/app-release.apk
+
+      # 6️⃣ 编译 simple_live_tv_app (TV版)
+      - name: Build simple_live_tv_app (Android TV)
+        run: flutter build apk --release
+        working-directory: simple_live_tv_app
+
+      # 7️⃣ 保存 simple_live_tv_app 的 APK
+      - name: Upload simple_live_tv_app APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: simple_live_tv_app-release-apk
+          path: simple_live_tv_app/build/app/outputs/flutter-apk/app-release.apk
